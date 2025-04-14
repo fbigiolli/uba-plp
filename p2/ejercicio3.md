@@ -40,12 +40,24 @@ Por L.G. Bool hay que ver solo dos casos: `p x = True` o `p x = False`.
 
 #### Caso `p x = False`
 ```
-⟺ (elem e (filter p xs)) 
-⟺ (elem e (filter p xs)) ⟹ (elem e xs) ⟹ (elem e (x:xs))       {HI}
-⟺ (elem e (filter p xs)) ⟹ (elem e xs) ⟹ (e == x || elem e xs) {E1}
+⟺ (elem e (if False then x : filter p xs else filter p xs) ⟹ (elem e (x:xs))) {p x = False}
+⟺ (elem e (filter p xs) ⟹ (elem e (x:xs)))                                    {IF}
+⟺ (elem e (filter p xs) ⟹ (e == x) || elem e xs)                              {E1}
 ```
-Si la premisa es falsa, entonces la implicacion es verdadera x def de ⟹.  
-Si la premisa es verdadera, vemos que el hecho de que valga (elem e xs) hace que el or tambien valga, por ende el caso vale.  
+Vemos el caso donde `(e == x)` es Falso
+```
+⟺ elem e (filter p xs) ⟹ (False || elem e xs) 
+⟺ elem e (filter p xs) ⟹ elem e xs {Bool}
+```
+Verdadero por HI. 
+
+Vemos el caso donde (e == x) es Verdadero
+```
+⟺ elem e (filter p xs) ⟹ (True || elem e xs) 
+⟺ elem e (filter p xs) ⟹ True {Bool}
+```
+Y esto es verdadero ya que el consecuente es verdadero, luego cualquier combinacion de valuaciones para la implicacion vale ( V ⟹ V ✓, F ⟹ V ✓)
+
 
 #### Caso `p x = True`
 ```
@@ -66,7 +78,7 @@ Que es trivialmente cierto ya que si la premisa es falsa la implicacion vale, o 
 ⟺ True ⟹ elem e (x:xs)                      {Def ||}
 ```
 
-Que es trivialmente verdadero ya que `e==x`, entonces claramente en la primer iteracion de `elem e (x:xs)` `e==x` valdra. 
+Que es trivialmente verdadero ya que `e==x`, entonces claramente en la primer iteracion de `elem e (x:xs)` `e==x` valdra (se puede desarrollar la ecuacion de elem e (x:xs) para demostrarlo, queda True ⟹ True.)
 
 Como probamos todos los casos y vemos que valen, podemos concluir por induccion que la propiedad vale. ✓
 
@@ -167,7 +179,7 @@ Lado derecho
 [] ++ ws                       {F0}
 = ws                          {++0}
 ```
-Entonces vale para zs = []
+Entonces vale para `zs = []`
 
 
 #### Caso inductivo
